@@ -1,11 +1,11 @@
 <?php
-        $config = include('call_blast_config.php');
+        include('call_blast_config.php');
         $numbers = file_get_contents("phone_number_list.txt");
     $number_list = explode(",", $numbers);
 
 
     if(is_odd($number_list)){
-        array_push($number_list, $config['extra_number']);
+        array_push($number_list, $extra_number);
     }
 
         shuffle($number_list);
@@ -15,7 +15,7 @@
                 if($i + 1 == sizeOf($number_list)){
                         return;
                 }
-                make_call($number_list[$i], $number_list[$i + 1]);
+                make_call($number_list[$i], $number_list[$i + 1], $exo_phone, $exotel_sid, $exotel_token);
         }
 
         function is_odd($number_list){
@@ -25,18 +25,18 @@
                 return true;
         }
 
-function make_call($from, $to){
+function make_call($from, $to, $exo_phone, $exotel_sid, $exotel_token){
         $post_data = array(
     'From' => $from,
     'To' => $to,
-    'CallerId' => $config['exo_phone'],
+    'CallerId' => $exo_phone,
     'TimeLimit' => "",
     'TimeOut' => "",
     'CallType' => "trans" //Can be "trans" for transactional and "promo" for promotional content
         );
 
-        $exotel_sid = $config['exotel_sid']; // Your Exotel SID - Get it from here: http://my.exotel.in/settings/site#api-settings
-        $exotel_token = $config['exotel_token']; // Your exotel token - Get it from here: http://my.exotel.in/settings/site#api-settings
+        $exotel_sid = $exotel_sid; // Your Exotel SID - Get it from here: http://my.exotel.in/settings/site#api-settings
+        $exotel_token = $exotel_token; // Your exotel token - Get it from here: http://my.exotel.in/settings/site#api-settings
 
         $url = "https://".$exotel_sid.":".$exotel_token."@twilix.exotel.in/v1/Accounts/".$exotel_sid."/Calls/connect";
 
